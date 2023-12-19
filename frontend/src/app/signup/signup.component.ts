@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { SnackbarService } from '../services/snackbar.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { GlobalConstants } from '../shared/global-constants';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-signup',
@@ -19,7 +20,8 @@ export class SignupComponent implements OnInit {
     private router:Router,
     private userService: UserService,
     private snackBarService: SnackbarService,
-    private dialogRef:MatDialogRef<SignupComponent>) { }
+    private dialogRef:MatDialogRef<SignupComponent>,
+    public ngxService:NgxUiLoaderService) { }
 
   ngOnInit(): void {
     this.signupForm=this.formBuilder.group({
@@ -31,19 +33,23 @@ export class SignupComponent implements OnInit {
   }
 
   handleSubmit(){
+    this.ngxService.start();
     var formData=this.signupForm.value;
     var data={
       name:formData.name,
-      email:formData.email,
       contactNumber:formData.contactNumber,
+      email:formData.email,
+      
       password:formData.password
     }
     this.userService.signup(data).subscribe((response:any)=>{
+      this.ngxService.stop();
       this.dialogRef.close();
       this.responseMessage=response?.message;
       this.snackBarService.openSnackBar(this.responseMessage,"");
       this.router.navigate(['/']);
     },(error)=>{
+      this.ngxService.stop();
       if(error.error?.message){
         this.responseMessage=error.error?.message;
       }

@@ -8,6 +8,7 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { ProductComponent } from '../dialog/product/product.component';
 import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -24,16 +25,21 @@ export class ManageProductComponent implements OnInit {
   constructor(private productService:ProductService,
     private dialog:MatDialog,
     private snackBarService:SnackbarService,
-    private router:Router) { }
+    private router:Router,
+    private ngxService:NgxUiLoaderService) { }
 
   ngOnInit(): void {
+    this.ngxService.start();
     this.tableData();
   }
 
   tableData(){
+
     this.productService.getProducts().subscribe((response:any)=>{
+      this.ngxService.stop();
       this.dataSource=new MatTableDataSource(response);
     },(error:any)=>{
+      this.ngxService.stop();
       console.log(error);
       if(error.error?.message){
         this.responseMessage=error.error?.message;

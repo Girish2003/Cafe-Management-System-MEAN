@@ -2,6 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { DashboardService } from '../services/dashboard.service';
 import { SnackbarService } from '../services/snackbar.service';
 import { GlobalConstants } from '../shared/global-constants';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
 	selector: 'app-dashboard',
@@ -16,13 +17,17 @@ export class DashboardComponent implements AfterViewInit {
 	ngAfterViewInit() { }
 
 	constructor(private dashboardService:DashboardService,
-		private snackBarService:SnackbarService) {
+		private snackBarService:SnackbarService,
+		private ngxService:NgxUiLoaderService) {
+			this.ngxService.start();
 			this.dashboardData();
 	}
 	dashboardData(){
 		this.dashboardService.getDetails().subscribe((response:any)=>{
+			this.ngxService.stop();
 			this.data=response;
 		},(error:any)=>{
+			this.ngxService.stop();
 			console.log(error);
 			if(error.error?.message){
 				this.responseMessage=error.error?.message;

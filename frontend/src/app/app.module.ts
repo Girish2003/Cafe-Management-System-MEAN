@@ -19,20 +19,21 @@ import { LoginComponent } from './login/login.component';
 import { TokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
 // import { CategoryComponent } from './services/category/category.component';
 // import {NgxUiLoaderModule, NgxUiLoaderConfig,SPINNER,PB_DIRECTION} from "ngx-ui-loader";
+import { NgxUiLoaderConfig,SPINNER,PB_DIRECTION,NgxUiLoaderModule } from 'ngx-ui-loader';
 
-// const ngxUiLoaderConfig:NgxUiLoaderConfig={
-//   text:"Loading...",
-//   textColor:"#FFFFFF",
-//   textPosition:'center-center',
-//   pbColor:"red",
-//   bgsColor:"red",
-//   fgsColor:"red",
-//   fgsType:SPINNER.ballSpinClockwise,
-//   fgsSize:100,
-//   pbDirection:PB_DIRECTION.leftToRight,
-//   pbThickness:5
+const ngxUiLoaderConfig:NgxUiLoaderConfig={
+  text:"Loading...",
+  textColor:"#FFFFFF",
+  textPosition:'center-center',
+  pbColor:"red",
+  bgsColor:"red",
+  fgsColor:"white",
+  fgsType:SPINNER.threeStrings,
+  fgsSize:100,
+  pbDirection:PB_DIRECTION.leftToRight,
+  pbThickness:5
 
-// }
+}
 
 @NgModule({
   declarations: [	
@@ -55,8 +56,8 @@ import { TokenInterceptorInterceptor } from './services/token-interceptor.interc
     MaterialModule,
     FlexLayoutModule,
     SharedModule,
-    HttpClientModule
-    //NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
+    HttpClientModule,
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
   providers: [HttpClientModule,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptorInterceptor,multi:true}],
   bootstrap: [AppComponent]

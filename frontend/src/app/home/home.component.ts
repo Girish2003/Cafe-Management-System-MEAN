@@ -4,6 +4,7 @@ import { SignupComponent } from '../signup/signup.component';
 import { LoginComponent } from '../login/login.component';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private dialog:MatDialog,
     private router:Router,
-    private userService:UserService) { }
+    private userService:UserService,
+    public ngxUiLoader:NgxUiLoaderService) { }
 
   ngOnInit(): void {
     if(localStorage.getItem("token")!=null){
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit {
     }
   }
   signupAction(){
+    // this.ngxUiLoader.start();
     const dialogConfig =new MatDialogConfig();
     dialogConfig.width="550px";
     this.dialog.open(SignupComponent,dialogConfig);
@@ -34,6 +37,7 @@ export class HomeComponent implements OnInit {
   }
 
   loginAction(){
+    // this.ngxUiLoader.start();
     const dialogConfig =new MatDialogConfig();
     dialogConfig.width="550px";
     this.dialog.open(LoginComponent,dialogConfig);

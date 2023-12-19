@@ -7,6 +7,10 @@ let path=require('path');
 var fs=require('fs');
 var uuid=require('uuid');
 
+
+
+
+
 var auth=require('../services/authentication');
 
 
@@ -15,17 +19,22 @@ router.post('/generateReport', auth.authenticateToken,(req,res)=>{
     
     const orderDetails=req.body;
     let productDetailsReport=JSON.parse(orderDetails.productDetails);
-    let query="insert into bill (name,uuid,email,contactNumber,paymentMethod,total,productDetails,createdBy) values(?,?,?,?,?,?,?,?)";
+    var query="insert into bill (name,uuid,email,contactNumber,paymentMethod,total,productDetails,createdBy) values(?,?,?,?,?,?,?,?)";
     connection.query(query,[orderDetails.name,generatedUuid,orderDetails.email,orderDetails.contactNumber,orderDetails.paymentMethod,orderDetails.totalAmount,orderDetails.productDetails,res.locals.email],(err,results)=>{
         if(!err){
+
             ejs.renderFile(path.join(__dirname,'',"report.ejs"),{productDetails:productDetailsReport,name:orderDetails.name,email:orderDetails.email,contactNumber:orderDetails.contactNumber,paymentMethod:orderDetails.paymentMethod,totalAmount:orderDetails.totalAmount},(err,results)=>{
+                // console.log('After rendering EJS template');
+
                 if(err){
                    // "productDetails":"[{\"id\": 1, \"name\": \"Black coffee\", \"price\": 99, \"total\": 99, \"category\": \"coffeee\", \"quantity\": \"1\" }]"
                         return res.status(500).json(err);
 
                 }
                 else{
-                    pdf.create(results).toFile('./generated_pdf'+generatedUuid+".pdf",function(err,data){
+                    // console.log('Before creating PDF');
+                    pdf.create(results).toFile('./generated_pdf/'+generatedUuid+".pdf",function(err,data){
+                        // console.log('After creating PDF');
                         if(err){
                             console.log(err);
                             return res.status(500).json(err);
@@ -46,7 +55,7 @@ router.post('/generateReport', auth.authenticateToken,(req,res)=>{
 
 router.post('/getPdf',auth.authenticateToken,function(req,res){
     const orderDetails=req.body;
-    const pdfPath='./generated_pdf/ '+orderDetails.uuid+'.pdf';
+    const pdfPath='./generated_pdf/'+orderDetails.uuid+'.pdf';
     if(fs.existsSync(pdfPath))
     {
         res.contentType("application/pdf");
@@ -60,7 +69,7 @@ router.post('/getPdf',auth.authenticateToken,function(req,res){
 
             }
             else{
-                pdf.create(results).tofile('./generated_pdf'+orderDetails.uuid+".pdf",function(err,data){
+                pdf.create(results).toFile('./generated_pdf/'+orderDetails.uuid+".pdf",function(err,data){
                     if(err){
                         console.log(err);
                         return res.status(500).json(err);
@@ -77,7 +86,7 @@ router.post('/getPdf',auth.authenticateToken,function(req,res){
 
 router.get('/getBills',auth.authenticateToken,(req,res,next)=>{
     
-    query="select * from bill order by DESC";
+    var query="select * from bill order by id DESC";
     connection.query(query,(err,results)=>{
         if(!err)
         {
@@ -93,7 +102,7 @@ router.get('/getBills',auth.authenticateToken,(req,res,next)=>{
 
 router.delete('/delete/:id',auth.authenticateToken,(req,res,next)=>{
     const id=req.params.id;
-    var query="delete from product where id=?";
+    var query="delete from bill where id=?";
     connection.query(query,[id],(err,results)=>{
         if(!err)
         {

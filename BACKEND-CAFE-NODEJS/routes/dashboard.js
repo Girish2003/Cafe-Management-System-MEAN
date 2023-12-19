@@ -10,12 +10,11 @@ router.get('/details',auth.authenticateToken,(req,res,next)=>{
     var productCount;
     var billCount;
     
-    var query="select count(id) categoryCount from category";
+    var query="select count(id) as categoryCount from category";
     connection.query(query,(err,results)=>{
         if(!err)
         {
-            console.log("Hi")
-            // console.log(res[0].categoryCount);
+            
                 categoryCount=results[0].categoryCount;
 
         }
@@ -46,7 +45,6 @@ router.get('/details',auth.authenticateToken,(req,res,next)=>{
                 product:productCount,
                 bill:billCount
             }
-            //console.log(billCount)
             return res.status(200).json(data);
 
         }

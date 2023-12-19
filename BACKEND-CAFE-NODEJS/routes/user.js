@@ -20,6 +20,10 @@ var checkRole=require('../services/checkRole');
 router.post('/signup',(req,res)=>{
     let user=req.body;
     query="select email,password,role,status from user where email=?"
+    if(user.email==null||user.name==null||user.contactNumber==null||user.password==null)
+    {
+        return res.status(400).json({message:"fill all the fields da"});
+    }
     connection.query(query,[user.email],(err,results)=>{
         if(!err)
         {
@@ -133,7 +137,7 @@ router.post('/forgetPassword',(req,res)=>{
     })
 })
 
-router.get('/get',auth.authenticateToken,(req,res)=>{
+router.get('/get',auth.authenticateToken,checkRole.checkRole,(req,res)=>{
     var query="select id,name,email,contactNumber,status from user where role='user'";
     connection.query(query,(err,results)=>{
         if(!err)
@@ -148,7 +152,7 @@ router.get('/get',auth.authenticateToken,(req,res)=>{
 })
 
 
-router.patch('/update',auth.authenticateToken,(req,res)=>{
+router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res)=>{
     let user=req.body;
     var query="update user set status=? where id=?";
     connection.query(query,[user.status,user.id],(err,results)=>{

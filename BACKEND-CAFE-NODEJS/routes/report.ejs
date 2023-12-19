@@ -34,8 +34,8 @@
                 <th>price</th>
                 <th>subTotal</th>
             </tr>
-            <% if (ProductDetails.length > 0) { %>
-                <% ProductDetails.forEach(product => { %>
+            <% if (productDetails.length > 0) { %>
+                <% productDetails.forEach(product => { %>
                     <tr>
                         <td><%= product.name %></td>
                         <td><%= product.category %></td>
@@ -46,17 +46,7 @@
                 <% }); %>
             <% } %>
             
-            <!-- <% if(ProductDetails.length>0) { %>
-                <% ProductDetails.forEach(product=>{ %>
-                    <tr>
-                        <td><%= product.name %></td>
-                        <td><%= product.category %></td>
-                        <td><%= product.quantity %></td>
-                        <td><%= product.price %></td>
-                        <td><%= product.total %></td>
-                    </tr>
-                    <%});%>
-                    <%}%> -->
+            
         </table>
         <h3>Total: <%= totalAmount %></h3>
     </body>
